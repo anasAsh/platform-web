@@ -1,0 +1,48 @@
+{
+  "name": "botler-platform-web",
+  "version": "1.0.0",
+  "description": "Template for new platforms for Botler",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/botlerjs/platform-web.git"
+  },
+  "author": "Adam Juhasz",
+  "license": "MIT",
+  "homepage": "https://github.com/botlerjs/platform-web#readme",
+  "devDependencies": {
+    "@types/body-parser": "0.0.33",
+    "@types/es6-promise": "0.0.32",
+    "@types/express": "^4.0.34",
+    "@types/isomorphic-fetch": "0.0.31",
+    "@types/react": "^15.0.0",
+    "@types/react-dom": "^0.14.20",
+    "@types/react-redux": "^4.4.35",
+    "awesome-typescript-loader": "^3.0.0-beta.18",
+    "botler": "github:fyndme/bot-framework#v2.0",
+    "copy-webpack-plugin": "^4.0.1",
+    "facebook-sendapi-types": "github:fyndme/facebook-sendapi-types",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-fbmessenger": "^1.6.1",
+    "react-redux": "^5.0.2",
+    "redux": "^3.6.0",
+    "source-map-loader": "^0.1.6",
+    "typescript": "^2.1.5",
+    "webpack": "^1.14.0"
+  },
+  "peerDependencies": {
+    "botler": "2.x"
+  },
+  "dependencies": {
+    "body-parser": "^1.16.0",
+    "botler-platform-facebook": "github:botlerjs/platform-facebook",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.14.0",
+    "facebook-send-api": "^2.7.0",
+    "isomorphic-fetch": "^2.2.1"
+  }
+}
