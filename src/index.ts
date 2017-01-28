@@ -1,2 +1,2 @@
-import { PlatformMiddleware } from 'botler/lib/types/platform';
-import Botler from 'botler';
+import Web from './web'
+export default Web;

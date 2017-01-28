@@ -40,7 +40,7 @@ export default class Web implements PlatformMiddleware {
     this.localPort = port;
     this.localApp = Express();
     this.localApp.use(bodyParser.json());
-    this.localApp.use(Express.static(`${__dirname}/web`));
+    this.localApp.use(Express.static(`${__dirname}/dist`));
 
     this.localApp.post('/api/conversation', (req, res, next) => {
       const user: BasicUser = {
