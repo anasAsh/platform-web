@@ -17,15 +17,19 @@ import { State } from './www/redux/store';
 const savedConversation: { [id: string]: Array<SendTypes.MessengerPayload> } = {};
 const PAGEID = 'page';
 
-export interface WebPostbackMessage {
-  type: 'postback';
+export interface WebMessage {
+  type: string;
   userid: string;
+  token: string;
+}
+
+export interface WebPostbackMessage extends WebMessage {
+  type: 'postback';
   payload: string;
 }
 
-export interface WebTextMessage {
+export interface WebTextMessage extends WebMessage {
   type: 'text';
-  userid: string;
   text: string;
 }
 
@@ -34,6 +38,8 @@ export default class Web implements PlatformMiddleware {
   private localApp: Express.Express;
   private localServer: http.Server = null;
   private localPort: number;
+  static convertToBotler = convertToBotler;
+  static convertFromBolter = convertFromBolter;
 
   constructor(botler: Botler, port: number = 3000, fbport: number = 4100) {
     this.bot = botler;
@@ -63,31 +69,13 @@ export default class Web implements PlatformMiddleware {
         _platform: this,
       };
 
-      let message: IncomingMessage;
-      switch ((<WebPostbackMessage | WebTextMessage> req.body).type) {
-        case 'postback':
-          message = {
-            type: 'postback',
-            payload: req.body.payload,
-          } as PostbackMessage;
-          break;
-
-        case 'text':
-          message = {
-            type: 'text',
-            text: req.body.text,
-          } as TextMessage;
-          break;
-
-        default:
-          throw new Error('bad message type');
-      }
+      const message = convertToBotler(req.body);
 
       const fbMessage: SendTypes.MessengerPayload = {
         recipient: {
           id: PAGEID,
         },
-        message: mapInternalToFB(message),
+        message: convertFromBolter(message),
       };
 
       _.update(savedConversation, [`${user.platform}${user.id.toString()}`], (n: Array<SendTypes.MessengerPayload>) => {
@@ -153,7 +141,7 @@ export default class Web implements PlatformMiddleware {
       recipient: {
         id: user.id,
       },
-      message: mapInternalToFB(message),
+      message: convertFromBolter(message),
     };
     _.update(savedConversation, [`${user.platform}${user.id.toString()}`], (n: Array<SendTypes.MessengerPayload>) => {
       return n ? n.concat(fbMessage) : [ fbMessage ];
@@ -173,4 +161,31 @@ export default class Web implements PlatformMiddleware {
     return Promise.resolve(conversation);
   }
 
+}
+
+export function convertToBotler(receivedMessage: WebMessage & WebPostbackMessage & WebTextMessage): IncomingMessage {
+  let message: IncomingMessage;
+  switch ((receivedMessage).type) {
+    case 'postback':
+      message = {
+        type: 'postback',
+        payload: receivedMessage.payload,
+      } as PostbackMessage;
+      break;
+
+    case 'text':
+      message = {
+        type: 'text',
+        text: receivedMessage.text,
+      } as TextMessage;
+      break;
+
+    default:
+      throw new Error('bad message type');
+  }
+  return message;
+}
+
+export function convertFromBolter<W extends WebMessage>(message: Message): W {
+  return mapInternalToFB(message);
 }

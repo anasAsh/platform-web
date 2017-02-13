@@ -1,2 +1,2 @@
-import Web from './web'
+import Web from './web';
 export default Web;

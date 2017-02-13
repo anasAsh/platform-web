@@ -2,7 +2,7 @@
   "name": "botler-platform-web",
   "version": "1.0.0",
   "description": "Template for new platforms for Botler",
-  "main": "lib/index.js",
+  "main": "lib/web.js",
   "scripts": {
     "build": "tsc && webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
