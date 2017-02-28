@@ -4,5 +4,6 @@ export interface State {
     userid: string;
     conversation: Conversations;
     pageid: string;
+    token: string;
 }
 export declare const defaultState: State;

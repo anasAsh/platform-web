@@ -73,12 +73,13 @@ export function getConversation(store: Store<State>) {
     });
 }
 
-export function sendText(userid: string, text: string) {
+export function sendText(userid: string, token: string, text: string) {
   return (dispatch: Dispatch<State>) => {
     const message: WebTextMessage = {
       userid: userid,
       text: text,
       type: 'text',
+      token: token,
     };
     fetch('/api/receive', {
       method: 'POST',
@@ -100,12 +101,13 @@ export function sendText(userid: string, text: string) {
   };
 }
 
-export function sendPostback(userid: string, payload: string) {
+export function sendPostback(userid: string, token: string, payload: string) {
   return (dispatch: Dispatch<State>) => {
     const message: WebPostbackMessage = {
       userid: userid,
       payload: payload,
       type: 'postback',
+      token: token,
     };
     fetch('/api/receive', {
       method: 'POST',

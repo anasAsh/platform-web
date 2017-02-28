@@ -1,4 +1,3 @@
-/// <reference types="bluebird" />
 import * as Promise from 'bluebird';
 import Alana from 'alana-core';
 import { Message, IncomingMessage } from 'alana-core/lib/types/message';

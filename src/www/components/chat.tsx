@@ -8,21 +8,23 @@ import { sendText, sendPostback } from '../redux/actions';
 interface Props {
   conversation: Conversations;
   userid: string;
-  sendText: (userid: string, text: string) => void;
-  sendPostback: (userid: string, payload: string) => void;
+  token: string;
+  sendText: (userid: string, token: string, text: string) => void;
+  sendPostback: (userid: string, token: string, payload: string) => void;
 }
 
 const mapStateToProps = function(store: State) {
   return {
     userid: store.userid,
+    token: store.token,
     conversation: store.conversation,
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<State>) => {
   return {
-    sendText: (userid: string, text: string) => sendText(userid, text)(dispatch),
-    sendPostback: (userid: string, payload: string) => sendPostback(userid, payload)(dispatch),
+    sendText: (userid: string, token: string, text: string) => sendText(userid, token, text)(dispatch),
+    sendPostback: (userid: string, token: string, payload: string) => sendPostback(userid, token, payload)(dispatch),
   };
 };
 
@@ -34,11 +36,11 @@ class Chat extends React.Component<Props, undefined> {
   }
 
   private sendText(text: string) {
-    this.props.sendText(this.props.userid, text);
+    this.props.sendText(this.props.userid, this.props.token, text);
   }
 
   private sendPostback(payload: string, text: string) {
-    this.props.sendPostback(this.props.userid, payload);
+    this.props.sendPostback(this.props.userid, this.props.token, payload);
   }
 
   public render() {

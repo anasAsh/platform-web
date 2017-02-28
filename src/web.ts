@@ -6,12 +6,12 @@ import * as SendTypes from 'facebook-sendapi-types';
 import * as http from 'http';
 import * as _ from 'lodash';
 
-import Botler from 'botler';
-import { mapInternalToFB } from 'botler-platform-facebook';
+import Alana from 'alana-core';
+import { mapInternalToFB } from 'alana-platform-facebook';
 
-import { Message, TextMessage, IncomingMessage, PostbackMessage, GreetingMessage } from 'botler/lib/types/message';
-import { PlatformMiddleware } from 'botler/lib/types/platform';
-import { BasicUser, User } from 'botler/lib/types/user';
+import { Message, TextMessage, IncomingMessage, PostbackMessage, GreetingMessage } from 'alana-core/lib/types/message';
+import { PlatformMiddleware } from 'alana-core/lib/types/platform';
+import { BasicUser, User } from 'alana-core/lib/types/user';
 import { State } from './www/redux/store';
 
 const savedConversation: { [id: string]: Array<SendTypes.MessengerPayload> } = {};
@@ -40,15 +40,16 @@ export interface WebGreetingMessage extends WebMessageBase {
 export type WebMessage = WebPostbackMessage | WebTextMessage | WebGreetingMessage;
 
 export default class Web implements PlatformMiddleware {
-  private bot: Botler;
+  private bot: Alana;
   private localApp: Express.Express;
   private localServer: http.Server = null;
   private localPort: number;
-  static convertToBotler = convertToBotler;
-  static convertFromBolter = convertFromBolter;
+  static convertToAlana = convertToBotler;
+  static convertFromAlana = convertFromBolter;
 
-  constructor(botler: Botler, port: number = 3000, fbport: number = 4100) {
-    this.bot = botler;
+  constructor(theBot: Alana, port: number = 3000, fbport: number = 4100) {
+    this.bot = theBot;
+    this.bot.addPlatform(this);
     this.localPort = port;
     this.localApp = Express();
     this.localApp.use(bodyParser.json());
@@ -104,6 +105,7 @@ export default class Web implements PlatformMiddleware {
               userid: user.id,
               conversation: conversation,
               pageid: PAGEID,
+              token: 'correct',
             };
             res.send(state);
           });
@@ -115,6 +117,7 @@ export default class Web implements PlatformMiddleware {
             userid: user.id,
             conversation: [],
             pageid: PAGEID,
+            token: 'correct',
           };
           return res.send(state);
         });
