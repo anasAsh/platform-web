@@ -23,7 +23,7 @@
     "@types/react-dom": "^0.14.20",
     "@types/react-redux": "^4.4.35",
     "awesome-typescript-loader": "^3.0.0-beta.18",
-    "botler": "github:fyndme/bot-framework#v2.0",
+    "botler": "github:alana-bot/core",
     "copy-webpack-plugin": "^4.0.1",
     "facebook-sendapi-types": "github:fyndme/facebook-sendapi-types",
     "react": "^15.4.2",
@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "body-parser": "^1.16.0",
-    "botler-platform-facebook": "github:botlerjs/platform-facebook",
+    "botler-platform-facebook": "github:alana-bot/platform-facebook",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
     "facebook-send-api": "^2.7.0",
