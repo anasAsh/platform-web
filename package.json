@@ -23,7 +23,7 @@
     "@types/react-dom": "^0.14.20",
     "@types/react-redux": "^4.4.35",
     "awesome-typescript-loader": "^3.0.0-beta.18",
-    "botler": "github:alana-bot/core",
+    "alana-core": "github:alana-bot/core",
     "copy-webpack-plugin": "^4.0.1",
     "facebook-sendapi-types": "github:fyndme/facebook-sendapi-types",
     "react": "^15.4.2",
@@ -36,7 +36,7 @@
     "webpack": "^1.14.0"
   },
   "peerDependencies": {
-    "botler": "2.x"
+    "alana-core": "2.x"
   },
   "dependencies": {
     "body-parser": "^1.16.0",
