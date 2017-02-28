@@ -1,7 +1,7 @@
 {
-  "name": "botler-platform-web",
+  "name": alana-platform-web",
   "version": "1.0.0",
-  "description": "Template for new platforms for Botler",
+  "description": "Web chat interface to alana chabots",
   "main": "lib/web.js",
   "scripts": {
     "build": "tsc && webpack",
@@ -9,11 +9,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/botlerjs/platform-web.git"
+    "url": "git+https://github.com/alana-cloud/platform-web.git"
   },
   "author": "Adam Juhasz",
   "license": "MIT",
-  "homepage": "https://github.com/botlerjs/platform-web#readme",
+  "homepage": "https://alana.cloud",
   "devDependencies": {
     "@types/body-parser": "0.0.33",
     "@types/es6-promise": "0.0.32",
