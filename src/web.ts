@@ -3,13 +3,13 @@ import * as bodyParser from 'body-parser';
 import * as Express from 'express';
 import FB from 'facebook-send-api';
 import * as SendTypes from 'facebook-sendapi-types';
-import * as http from "http";
+import * as http from 'http';
 import * as _ from 'lodash';
 
 import Botler from 'botler';
 import { mapInternalToFB } from 'botler-platform-facebook';
 
-import { Message, TextMessage, IncomingMessage, PostbackMessage } from 'botler/lib/types/message';
+import { Message, TextMessage, IncomingMessage, PostbackMessage, GreetingMessage } from 'botler/lib/types/message';
 import { PlatformMiddleware } from 'botler/lib/types/platform';
 import { BasicUser, User } from 'botler/lib/types/user';
 import { State } from './www/redux/store';
@@ -17,21 +17,27 @@ import { State } from './www/redux/store';
 const savedConversation: { [id: string]: Array<SendTypes.MessengerPayload> } = {};
 const PAGEID = 'page';
 
-export interface WebMessage {
-  type: string;
+export interface WebMessageBase {
   userid: string;
   token: string;
 }
 
-export interface WebPostbackMessage extends WebMessage {
+export interface WebPostbackMessage extends WebMessageBase {
   type: 'postback';
   payload: string;
+  text?: string;
 }
 
-export interface WebTextMessage extends WebMessage {
+export interface WebTextMessage extends WebMessageBase {
   type: 'text';
   text: string;
 }
+
+export interface WebGreetingMessage extends WebMessageBase {
+  type: 'greeting';
+}
+
+export type WebMessage = WebPostbackMessage | WebTextMessage | WebGreetingMessage;
 
 export default class Web implements PlatformMiddleware {
   private bot: Botler;
@@ -163,9 +169,9 @@ export default class Web implements PlatformMiddleware {
 
 }
 
-export function convertToBotler(receivedMessage: WebMessage & WebPostbackMessage & WebTextMessage): IncomingMessage {
+export function convertToBotler(receivedMessage: WebMessage): IncomingMessage {
   let message: IncomingMessage;
-  switch ((receivedMessage).type) {
+  switch (receivedMessage.type) {
     case 'postback':
       message = {
         type: 'postback',
@@ -178,6 +184,12 @@ export function convertToBotler(receivedMessage: WebMessage & WebPostbackMessage
         type: 'text',
         text: receivedMessage.text,
       } as TextMessage;
+      break;
+
+    case 'greeting':
+      message = {
+        type: 'greeting',
+      } as GreetingMessage;
       break;
 
     default:

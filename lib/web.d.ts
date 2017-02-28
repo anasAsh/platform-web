@@ -4,19 +4,23 @@ import Botler from 'botler';
 import { Message, IncomingMessage } from 'botler/lib/types/message';
 import { PlatformMiddleware } from 'botler/lib/types/platform';
 import { User } from 'botler/lib/types/user';
-export interface WebMessage {
-    type: string;
+export interface WebMessageBase {
     userid: string;
     token: string;
 }
-export interface WebPostbackMessage extends WebMessage {
+export interface WebPostbackMessage extends WebMessageBase {
     type: 'postback';
     payload: string;
+    text?: string;
 }
-export interface WebTextMessage extends WebMessage {
+export interface WebTextMessage extends WebMessageBase {
     type: 'text';
     text: string;
 }
+export interface WebGreetingMessage extends WebMessageBase {
+    type: 'greeting';
+}
+export declare type WebMessage = WebPostbackMessage | WebTextMessage | WebGreetingMessage;
 export default class Web implements PlatformMiddleware {
     private bot;
     private localApp;
@@ -30,5 +34,5 @@ export default class Web implements PlatformMiddleware {
     send<U extends User, M extends Message>(user: U, message: M): Promise<this>;
     private getUserConversation(userId);
 }
-export declare function convertToBotler(receivedMessage: WebMessage & WebPostbackMessage & WebTextMessage): IncomingMessage;
+export declare function convertToBotler(receivedMessage: WebMessage): IncomingMessage;
 export declare function convertFromBolter<W extends WebMessage>(message: Message): W;
