@@ -1,5 +1,5 @@
 {
-  "name": alana-platform-web",
+  "name": "alana-platform-web",
   "version": "1.0.0",
   "description": "Web chat interface to alana chabots",
   "main": "lib/web.js",
