@@ -29,7 +29,6 @@
     "webpack": "^1.14.0"
   },
   "peerDependencies": {
-    "alana-core": "2.x"
   },
   "dependencies": {
     "body-parser": "^1.16.0",
