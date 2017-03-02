@@ -9,7 +9,7 @@ import * as _ from 'lodash';
 import Alana from 'alana-core';
 import { mapInternalToFB } from 'alana-platform-facebook';
 
-import { Message, TextMessage, IncomingMessage, PostbackMessage, GreetingMessage } from 'alana-core/lib/types/message';
+import { Message, TextMessage, IncomingMessage, PostbackMessage, GreetingMessage, OutgoingMessage } from 'alana-core/lib/types/message';
 import { PlatformMiddleware } from 'alana-core/lib/types/platform';
 import { BasicUser, User } from 'alana-core/lib/types/user';
 import { State } from './www/redux/store';
@@ -44,8 +44,8 @@ export default class Web implements PlatformMiddleware {
   private localApp: Express.Express;
   private localServer: http.Server = null;
   private localPort: number;
-  static convertToAlana = convertToBotler;
-  static convertFromAlana = convertFromBolter;
+  static convertToAlana = convertToAlana;
+  static convertFromAlana = convertFromAlana;
 
   constructor(theBot: Alana, port: number = 3000, fbport: number = 4100) {
     this.bot = theBot;
@@ -76,20 +76,20 @@ export default class Web implements PlatformMiddleware {
         _platform: this,
       };
 
-      const message = convertToBotler(req.body);
+      const message = convertToAlana(req.body);
 
       const fbMessage: SendTypes.MessengerPayload = {
         recipient: {
           id: PAGEID,
         },
-        message: convertFromBolter(message),
+        message: convertFromAlana(message),
       };
 
       _.update(savedConversation, [`${user.platform}${user.id.toString()}`], (n: Array<SendTypes.MessengerPayload>) => {
         return n ? n.concat(fbMessage) : [ fbMessage ];
       });
 
-      this.bot.processMessage(user, message);
+      this.bot.processMessage(user, message as IncomingMessage);
     });
 
     this.localApp.post('/api/start', (req, res, next) => {
@@ -145,12 +145,12 @@ export default class Web implements PlatformMiddleware {
     return Promise.resolve(this);
   }
 
-  public send <U extends User, M extends Message>(user: U, message: M): Promise<this> {
+  public send <U extends User>(user: U, message: OutgoingMessage): Promise<this> {
     const fbMessage: SendTypes.MessengerPayload = {
       recipient: {
         id: user.id,
       },
-      message: convertFromBolter(message),
+      message: convertFromAlana(message),
     };
     _.update(savedConversation, [`${user.platform}${user.id.toString()}`], (n: Array<SendTypes.MessengerPayload>) => {
       return n ? n.concat(fbMessage) : [ fbMessage ];
@@ -172,7 +172,7 @@ export default class Web implements PlatformMiddleware {
 
 }
 
-export function convertToBotler(receivedMessage: WebMessage): IncomingMessage {
+export function convertToAlana(receivedMessage: WebMessage): OutgoingMessage | IncomingMessage {
   let message: IncomingMessage;
   switch (receivedMessage.type) {
     case 'postback':
@@ -201,6 +201,20 @@ export function convertToBotler(receivedMessage: WebMessage): IncomingMessage {
   return message;
 }
 
-export function convertFromBolter<W extends WebMessage>(message: Message): W {
-  return mapInternalToFB(message);
+export function convertFromAlana(message: OutgoingMessage | IncomingMessage): SendTypes.MessengerMessage {
+  switch (message.type) {
+    case 'text':
+     return {
+       text: message.text,
+     };
+    case 'image':
+      return {
+        attachment: {
+          type: 'image',
+          payload: {
+            url: message.url,
+          },
+        },
+      };
+  }
 }
