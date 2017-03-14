@@ -6,12 +6,12 @@ import * as SendTypes from 'facebook-sendapi-types';
 import * as http from 'http';
 import * as _ from 'lodash';
 
-import Alana from 'alana-core';
-import { mapInternalToFB } from 'alana-platform-facebook';
+import Alana from '@alana/core';
+import { mapInternalToFB } from '@alana/platform-facebook';
 
-import { Message, TextMessage, IncomingMessage, PostbackMessage, GreetingMessage, OutgoingMessage } from 'alana-core/lib/types/message';
-import { PlatformMiddleware } from 'alana-core/lib/types/platform';
-import { BasicUser, User } from 'alana-core/lib/types/user';
+import { Message, TextMessage, IncomingMessage, PostbackMessage, GreetingMessage, OutgoingMessage } from '@alana/core/lib/types/message';
+import { PlatformMiddleware } from '@alana/core/lib/types/platform';
+import { BasicUser, User } from '@alana/core/lib/types/user';
 import { State } from './www/redux/store';
 
 const savedConversation: { [id: string]: Array<SendTypes.MessengerPayload> } = {};
@@ -111,7 +111,10 @@ export default class Web implements PlatformMiddleware {
           });
       }
       console.log('new user');
-      this.bot.processGreeting(user)
+      const greeting: GreetingMessage = {
+        type: 'greeting',
+      };
+      this.bot.processMessage(user, greeting)
         .then(() => {
           const state: State = {
             userid: user.id,
