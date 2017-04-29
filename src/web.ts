@@ -5,6 +5,7 @@ import FB from 'facebook-send-api';
 import * as SendTypes from 'facebook-sendapi-types';
 import * as http from 'http';
 import * as _ from 'lodash';
+const uuidV1 = require('uuid/v1');
 
 import Alana from '@alana/core';
 import { mapInternalToFB } from '@alana/platform-facebook';
@@ -113,6 +114,8 @@ export default class Web implements PlatformMiddleware {
       console.log('new user');
       const greeting: GreetingMessage = {
         type: 'greeting',
+        id: uuidV1(),
+        conversation_id: user.id,
       };
       this.bot.processMessage(user, greeting)
         .then(() => {
@@ -179,22 +182,28 @@ export function convertToAlana(receivedMessage: WebMessage): OutgoingMessage | I
   let message: IncomingMessage;
   switch (receivedMessage.type) {
     case 'postback':
-      message = {
+      message = <PostbackMessage>{
         type: 'postback',
         payload: receivedMessage.payload,
-      } as PostbackMessage;
+        id: uuidV1(),
+        conversation_id: receivedMessage.userid
+      };
       break;
 
     case 'text':
       message = {
         type: 'text',
         text: receivedMessage.text,
+        id: uuidV1(),
+        conversation_id: receivedMessage.userid
       } as TextMessage;
       break;
 
     case 'greeting':
       message = {
         type: 'greeting',
+        id: uuidV1(),
+        conversation_id: receivedMessage.userid
       } as GreetingMessage;
       break;
 

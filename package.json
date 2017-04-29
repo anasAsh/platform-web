@@ -1,6 +1,6 @@
 {
   "name": "@alana/platform-web",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Web chat interface to alana chabots",
   "main": "lib/web.js",
   "scripts": {
@@ -17,6 +17,7 @@
   "devDependencies": {
     "@alana/core": "2.x",
     "@types/bluebird": "^3.5.0",
+    "@types/request-promise": "^4.1.33",
     "awesome-typescript-loader": "^3.0.0-beta.18",
     "copy-webpack-plugin": "^4.0.1",
     "facebook-sendapi-types": "github:fyndme/facebook-sendapi-types",
